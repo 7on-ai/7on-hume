@@ -24,7 +24,7 @@ export const Nav = () => {
           <span>
             <Github className={"size-4"} />
           </span>
-          <span>Star on GitHub</span>
+          <span>Join 7on Waitlist</span>
         </Button>
         <Button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
