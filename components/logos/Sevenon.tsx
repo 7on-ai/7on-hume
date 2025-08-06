@@ -10,7 +10,14 @@ const Sevenon = (props: React.SVGProps<SVGSVGElement>) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <circle cx="50" cy="50" r="50" fill="red" />
+    <circle
+      cx="50"
+      cy="50"
+      r="45"
+      fill="none"
+      stroke="red"
+      strokeWidth="5"
+    />
   </svg>
 );
 
