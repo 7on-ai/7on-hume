@@ -2,7 +2,7 @@
 
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
-import Github from "./logos/GitHub";
+import Sevenon from "./logos/Sevenon";
 import pkg from "@/package.json";
 import { useTheme } from "next-themes";
 
@@ -22,7 +22,7 @@ export const Nav = () => {
           className={"ml-auto flex items-center gap-1.5 rounded-full"}
         >
           <span>
-            <Github className={"size-4"} />
+            <Sevenon className={"size-4"} />
           </span>
           <span>Join Waitlist</span>
         </Button>
