@@ -10,35 +10,30 @@ export const Nav = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div
-      className={"fixed top-0 right-0 px-4 py-2 flex items-center h-14 z-50"}
-    >
-      <div className={"ml-auto flex items-center gap-1"}>
+    <div className="fixed top-0 left-0 w-full flex justify-center z-50 h-14">
+      <div className="flex items-center gap-2">
         <Button
           onClick={() => {
             window.open(pkg.homepage, "_blank", "noopener noreferrer");
           }}
-          variant={"ghost"}
-          className={"ml-auto flex items-center gap-1.5 rounded-full"}
+          variant="ghost"
+          className="flex items-center gap-1.5 rounded-full"
         >
-          <span>
-            <Sevenon className={"size-4"} />
-          </span>
+          <Sevenon className="size-4" />
           <span>Join Waitlist</span>
         </Button>
+
         <Button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          variant={"ghost"}
-          className={"ml-auto flex items-center gap-1.5 rounded-full"}
+          variant="ghost"
+          className="flex items-center gap-1.5 rounded-full"
         >
-          <span>
-            {theme === "dark" ? (
-              <Sun className={"size-4"} />
-            ) : (
-              <Moon className={"size-4"} />
-            )}
-          </span>
-          <span>{theme === 'dark' ? "Light" : "Dark"} Mode</span>
+          {theme === "dark" ? (
+            <Sun className="size-4" />
+          ) : (
+            <Moon className="size-4" />
+          )}
+          <span>{theme === "dark" ? "Light" : "Dark"} Mode</span>
         </Button>
       </div>
     </div>
