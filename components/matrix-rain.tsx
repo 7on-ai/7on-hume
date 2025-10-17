@@ -250,7 +250,7 @@ export default function MatrixRain() {
 } else {
   // สีเขียวอ่อนจางๆ สำหรับตัวอักษรที่ห่างเมาส์
   const opacity = charIndex === 0 ? 1 : 1 - charIndex / drop.characters.length
-  ctx.fillStyle = `rgba(0, 255, 70, ${opacity})`
+  ctx.fillStyle = `rgba(180, 180, 180, ${opacity})`
 }
 
             // Draw the character
