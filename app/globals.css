@@ -122,19 +122,30 @@
   }
 }
 
-/* Matrix Rain Canvas Fix */
-canvas {
-  display: block;
-}
-
-/* Ensure full height for containers */
+/* Ensure proper stacking and rendering */
 html, body {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto; /* Changed from hidden to auto */
+  position: relative;
 }
 
 #__next {
   height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Matrix Rain Canvas specific styles */
+canvas {
+  display: block;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Ensure backgrounds are visible */
+body {
+  background-color: #000;
 }
