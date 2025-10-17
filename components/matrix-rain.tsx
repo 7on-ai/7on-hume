@@ -1,216 +1,132 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 
-// Collection of Japanese characters
 const japaneseChars = [
   "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
   "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
   "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
   "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ",
-  "ル", "レ", "ロ", "ワ", "ヲ", "ン", "あ", "い", "う", "え",
-  "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ",
-  "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね",
-  "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め",
-  "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ",
-  "を", "ん", "日", "月", "火", "水", "木", "金", "土", "山",
-  "川", "海", "空", "雨", "雪", "風", "雲", "星", "光", "影"
+  "ル", "レ", "ロ", "ワ", "ヲ", "ン", "0", "1", "2", "3", "4", 
+  "5", "6", "7", "8", "9"
 ]
 
 interface Drop {
   x: number
   y: number
   speed: number
-  characters: string[]
-  currentCharIndex: number
-  updateFrequency: number
-  lastUpdate: number
+  chars: string[]
+  opacity: number[]
 }
 
-function MatrixRain() {
+export default function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const dropsRef = useRef<Drop[]>([])
-  const animationRef = useRef<number>(0)
+  const animationRef = useRef<number>()
+  const mouseRef = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    const handleResize = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current
-        const width = window.innerWidth
-        const height = window.innerHeight
-
-        canvas.width = width
-        canvas.height = height
-        setDimensions({ width, height })
-
-        initializeDrops(width, height)
-      }
-    }
-
-    const initializeDrops = (width: number, height: number) => {
-      const drops: Drop[] = []
-      const dropCount = Math.floor(width / 25)
-
-      for (let i = 0; i < dropCount; i++) {
-        drops.push(createDrop(width, height))
-      }
-
-      dropsRef.current = drops
-    }
-
-    const createDrop = (width: number, height: number): Drop => {
-      const charCount = Math.floor(Math.random() * 15) + 5
-      const characters: string[] = []
-
-      for (let i = 0; i < charCount; i++) {
-        const randomIndex = Math.floor(Math.random() * japaneseChars.length)
-        characters.push(japaneseChars[randomIndex])
-      }
-
-      return {
-        x: Math.random() * width,
-        y: Math.random() * -height,
-        speed: Math.random() * 0.8 + 0.3,
-        characters,
-        currentCharIndex: 0,
-        updateFrequency: Math.floor(Math.random() * 10) + 5,
-        lastUpdate: 0,
-      }
-    }
-
-    window.addEventListener("resize", handleResize)
-    handleResize()
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-      cancelAnimationFrame(animationRef.current)
-    }
-  }, [])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!canvasRef.current || dimensions.width === 0) return
-
     const canvas = canvasRef.current
+    if (!canvas) return
+
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      initDrops()
+    }
+
+    const initDrops = () => {
+      const drops: Drop[] = []
+      const columns = Math.floor(canvas.width / 20)
+      
+      for (let i = 0; i < columns; i++) {
+        const charCount = Math.floor(Math.random() * 20) + 10
+        const chars: string[] = []
+        const opacity: number[] = []
+        
+        for (let j = 0; j < charCount; j++) {
+          chars.push(japaneseChars[Math.floor(Math.random() * japaneseChars.length)])
+          opacity.push(1 - (j / charCount))
+        }
+        
+        drops.push({
+          x: i * 20,
+          y: Math.random() * -canvas.height,
+          speed: Math.random() * 2 + 1,
+          chars,
+          opacity
+        })
+      }
+      
+      dropsRef.current = drops
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+    }
+
     const animate = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.2)"
-      ctx.fillRect(0, 0, dimensions.width, dimensions.height)
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      dropsRef.current.forEach((drop, index) => {
-        const dx = mousePos.x - drop.x
-        const dy = mousePos.y - drop.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
-        const influenceRadius = 180
-
-        drop.characters.forEach((char, charIndex) => {
-          const y = drop.y - charIndex * 24
-
-          if (y < dimensions.height && y > 0) {
-            if (distance < influenceRadius) {
-              const intensity = 1 - distance / influenceRadius
-              const r = Math.floor(120 * intensity)
-              const g = Math.floor(220 * intensity)
-              const b = Math.floor(255 * intensity)
-              ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+      dropsRef.current.forEach((drop) => {
+        const { x, y, chars, opacity } = drop
+        
+        chars.forEach((char, j) => {
+          const charY = y - j * 20
+          
+          if (charY > 0 && charY < canvas.height) {
+            const dx = mouseRef.current.x - x
+            const dy = mouseRef.current.y - charY
+            const distance = Math.sqrt(dx * dx + dy * dy)
+            const maxDistance = 150
+            
+            if (distance < maxDistance) {
+              const intensity = 1 - (distance / maxDistance)
+              ctx.fillStyle = `rgba(0, 255, 150, ${opacity[j] * intensity})`
             } else {
-              const opacity = charIndex === 0 ? 1 : 1 - charIndex / drop.characters.length
-              ctx.fillStyle = `rgba(180, 180, 180, ${opacity})`
+              ctx.fillStyle = `rgba(0, 255, 70, ${opacity[j]})`
             }
-
-            ctx.font = '18px "Hiragino Sans", "MS Gothic", monospace'
-            ctx.fillText(char, drop.x, y)
+            
+            ctx.font = j === 0 ? "bold 16px monospace" : "16px monospace"
+            ctx.fillText(char, x, charY)
           }
         })
-
+        
         drop.y += drop.speed
-        drop.lastUpdate++
-
-        if (drop.lastUpdate > drop.updateFrequency) {
-          drop.lastUpdate = 0
-          const randomIndex = Math.floor(Math.random() * japaneseChars.length)
-          drop.characters[0] = japaneseChars[randomIndex]
+        
+        if (drop.y - chars.length * 20 > canvas.height) {
+          drop.y = Math.random() * -200
+          drop.speed = Math.random() * 2 + 1
         }
-
-        if (drop.y - drop.characters.length * 24 > dimensions.height) {
-          dropsRef.current[index] = createDrop(dimensions.width, dimensions.height)
+        
+        if (Math.random() > 0.98) {
+          drop.chars[0] = japaneseChars[Math.floor(Math.random() * japaneseChars.length)]
         }
       })
 
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    const createDrop = (width: number, height: number): Drop => {
-      const charCount = Math.floor(Math.random() * 15) + 5
-      const characters: string[] = []
-
-      for (let i = 0; i < charCount; i++) {
-        const randomIndex = Math.floor(Math.random() * japaneseChars.length)
-        characters.push(japaneseChars[randomIndex])
-      }
-
-      return {
-        x: Math.random() * width,
-        y: -100,
-        speed: Math.random() * 0.8 + 0.3,
-        characters,
-        currentCharIndex: 0,
-        updateFrequency: Math.floor(Math.random() * 10) + 5,
-        lastUpdate: 0,
-      }
-    }
-
+    window.addEventListener("resize", resize)
+    window.addEventListener("mousemove", handleMouseMove)
+    resize()
     animate()
 
     return () => {
-      cancelAnimationFrame(animationRef.current)
+      window.removeEventListener("resize", resize)
+      window.removeEventListener("mousemove", handleMouseMove)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
     }
-  }, [dimensions, mousePos])
+  }, [])
 
-  return <canvas ref={canvasRef} className="w-full h-full block" aria-label="Japanese character rain animation" />
-}
-
-export default function Home() {
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Matrix Rain Background */}
-      <div className="absolute inset-0 z-0">
-        <MatrixRain />
-      </div>
-      
-      {/* Content Overlay */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
-        <div className="max-w-4xl px-8 text-center">
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
-            7on AI
-          </h1>
-          <p className="text-xl mb-8 text-gray-300">
-            The personal AI agent
-          </p>
-          
-          <div className="flex gap-4 justify-center">
-            <button className="px-8 py-3 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-full transition-all duration-300 transform hover:scale-105">
-              Start Call
-            </button>
-            <button className="px-8 py-3 bg-transparent border-2 border-green-500 hover:bg-green-500/10 text-green-500 font-semibold rounded-full transition-all duration-300">
-              Join Waitlist
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <canvas 
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full"
+    />
   )
 }
