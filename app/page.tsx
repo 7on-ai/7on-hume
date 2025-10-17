@@ -18,13 +18,13 @@ export default async function Page() {
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Matrix Rain Background */}
+      {/* Matrix Rain Background - z-0 */}
       <div className="absolute inset-0 z-0">
         <MatrixRain />
       </div>
       
-      {/* Chat Interface */}
-      <div className="relative z-10 grow flex flex-col">
+      {/* Chat Interface - z-10 */}
+      <div className="relative z-10 w-full h-full flex flex-col">
         <Chat accessToken={accessToken} />
       </div>
     </div>
