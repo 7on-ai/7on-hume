@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const japaneseChars = [
   "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
@@ -22,6 +22,7 @@ export default function MatrixRain() {
   const dropsRef = useRef<Drop[]>([])
   const animationRef = useRef<number>()
   const mouseRef = useRef({ x: 0, y: 0 })
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -31,9 +32,19 @@ export default function MatrixRain() {
     if (!ctx) return
 
     const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const width = window.innerWidth
+      const height = window.innerHeight
+      
+      // Set canvas size
+      canvas.width = width
+      canvas.height = height
+      
+      // Set canvas style
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      
       initDrops()
+      setIsReady(true)
     }
 
     const initDrops = () => {
@@ -67,6 +78,9 @@ export default function MatrixRain() {
     }
 
     const animate = () => {
+      if (!ctx || !canvas) return
+      
+      // Fill with semi-transparent black for trail effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -111,8 +125,14 @@ export default function MatrixRain() {
 
     window.addEventListener("resize", resize)
     window.addEventListener("mousemove", handleMouseMove)
+    
+    // Initialize
     resize()
-    animate()
+    
+    // Start animation after a small delay to ensure canvas is ready
+    setTimeout(() => {
+      animate()
+    }, 100)
 
     return () => {
       window.removeEventListener("resize", resize)
@@ -126,15 +146,17 @@ export default function MatrixRain() {
   return (
     <canvas 
       ref={canvasRef}
-      className="block w-full h-full"
       style={{ 
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
         display: 'block',
-        zIndex: 0
+        zIndex: 0,
+        pointerEvents: 'none',
+        opacity: isReady ? 1 : 0,
+        transition: 'opacity 0.3s ease-in'
       }}
     />
   )
