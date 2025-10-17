@@ -1,5 +1,9 @@
 import { getHumeAccessToken } from "@/utils/getHumeAccessToken";
-import ClientWrapper from "@/components/ClientWrapper";
+import dynamic from "next/dynamic";
+
+const Chat = dynamic(() => import("@/components/Chat"), {
+  ssr: false,
+});
 
 export default async function Page() {
   const accessToken = await getHumeAccessToken();
@@ -8,5 +12,9 @@ export default async function Page() {
     throw new Error('Unable to get access token');
   }
 
-  return <ClientWrapper accessToken={accessToken} />;
+  return (
+    <div className={"grow flex flex-col"}>
+      <Chat accessToken={accessToken} />
+    </div>
+  );
 }
