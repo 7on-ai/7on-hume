@@ -15,7 +15,6 @@ export const Nav = () => {
           variant="ghost"
           className="flex items-center gap-1.5 rounded-full text-green-400 hover:text-green-300 hover:bg-green-400/10"
         >
-          <Sun className="size-4" />
           <span>Join Waitlist</span>
         </Button>
 
