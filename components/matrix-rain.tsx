@@ -22,34 +22,43 @@ export default function MatrixRain() {
   const dropsRef = useRef<Drop[]>([])
   const animationRef = useRef<number>()
   const mouseRef = useRef({ x: 0, y: 0 })
-  const [isReady, setIsReady] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    console.log("MatrixRain mounted")
+    
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {
+      console.error("Canvas ref is null")
+      return
+    }
+
+    console.log("Canvas element found:", canvas)
 
     const ctx = canvas.getContext("2d", { alpha: false })
-    if (!ctx) return
+    if (!ctx) {
+      console.error("Cannot get 2d context")
+      return
+    }
 
     const resize = () => {
       const width = window.innerWidth
       const height = window.innerHeight
       
-      // Set canvas size
       canvas.width = width
       canvas.height = height
       
-      // Set canvas style
-      canvas.style.width = `${width}px`
-      canvas.style.height = `${height}px`
+      console.log("Canvas resized:", width, "x", height)
       
       initDrops()
-      setIsReady(true)
     }
 
     const initDrops = () => {
       const drops: Drop[] = []
       const columns = Math.floor(canvas.width / 20)
+      
+      console.log("Initializing", columns, "columns")
       
       for (let i = 0; i < columns; i++) {
         const charCount = Math.floor(Math.random() * 20) + 10
@@ -71,6 +80,7 @@ export default function MatrixRain() {
       }
       
       dropsRef.current = drops
+      console.log("Drops initialized:", drops.length)
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -80,7 +90,6 @@ export default function MatrixRain() {
     const animate = () => {
       if (!ctx || !canvas) return
       
-      // Fill with semi-transparent black for trail effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -126,22 +135,27 @@ export default function MatrixRain() {
     window.addEventListener("resize", resize)
     window.addEventListener("mousemove", handleMouseMove)
     
-    // Initialize
     resize()
     
-    // Start animation after a small delay to ensure canvas is ready
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      console.log("Starting animation")
       animate()
     }, 100)
 
     return () => {
       window.removeEventListener("resize", resize)
       window.removeEventListener("mousemove", handleMouseMove)
+      clearTimeout(timer)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
+        console.log("Animation cancelled")
       }
     }
   }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <canvas 
@@ -155,8 +169,7 @@ export default function MatrixRain() {
         display: 'block',
         zIndex: 0,
         pointerEvents: 'none',
-        opacity: isReady ? 1 : 0,
-        transition: 'opacity 0.3s ease-in'
+        backgroundColor: '#000'
       }}
     />
   )
