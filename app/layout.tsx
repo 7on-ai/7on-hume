@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "7on AI",
-  description: "The personal AI agent",
+  title: "7on",
+  description: "Your personal AI agent",
 };
 
 export default function RootLayout({
