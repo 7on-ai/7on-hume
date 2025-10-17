@@ -239,19 +239,19 @@ export default function MatrixRain() {
 
           if (y < dimensions.height && y > 0) {
             // Determine character color based on mouse proximity
-            if (distance < influenceRadius) {
-              // Calculate color based on distance (closer = more vibrant)
-              const intensity = 1 - distance / influenceRadius
-              // Create a brighter cyan-to-purple gradient based on distance
-              const r = Math.floor(120 * intensity)
-              const g = Math.floor(220 * intensity)
-              const b = Math.floor(255 * intensity)
-              ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
-            } else {
-              // Default white with varying opacity based on position in the drop
-              const opacity = charIndex === 0 ? 1 : 1 - charIndex / drop.characters.length
-              ctx.fillStyle = `rgba(180, 180, 180, ${opacity})`
-            }
+  if (distance < influenceRadius) {
+  // ความเข้มสีตามระยะ
+  const intensity = 1 - distance / influenceRadius
+  // สีเขียวเรืองแสง (เน้น g สูง)
+  const r = Math.floor(0 * intensity)
+  const g = Math.floor(255 * intensity)
+  const b = Math.floor(70 * intensity)
+  ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+} else {
+  // สีเขียวอ่อนจางๆ สำหรับตัวอักษรที่ห่างเมาส์
+  const opacity = charIndex === 0 ? 1 : 1 - charIndex / drop.characters.length
+  ctx.fillStyle = `rgba(0, 255, 70, ${opacity})`
+}
 
             // Draw the character
             ctx.font = '18px "Hiragino Sans", "MS Gothic", monospace'
