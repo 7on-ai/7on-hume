@@ -17,36 +17,22 @@ export default async function Page() {
   }
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      width: '100%', 
-      height: '100vh',
-      overflow: 'hidden',
-      backgroundColor: '#000'
-    }}>
-      {/* Matrix Rain Background - Layer 0 */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0
-      }}>
-        <MatrixRain />
-      </div>
+    <>
+      {/* Matrix Rain Background - Fixed position, lowest z-index */}
+      <MatrixRain />
       
-      {/* Chat Interface - Layer 10 */}
+      {/* Chat Interface - Relative position, higher z-index */}
       <div style={{
         position: 'relative',
         zIndex: 10,
         width: '100%',
-        height: '100%',
+        height: '100vh',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        pointerEvents: 'auto'
       }}>
         <Chat accessToken={accessToken} />
       </div>
-    </div>
+    </>
   );
 }
