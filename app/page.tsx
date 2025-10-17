@@ -17,14 +17,14 @@ export default async function Page() {
   }
 
   return (
-    <div className={"grow flex flex-col relative"}>
+    <div className="grow flex flex-col relative bg-black">
       {/* Matrix Rain Background */}
-      <div className="fixed inset-0 z-0 bg-black">
+      <div className="fixed inset-0 z-0">
         <MatrixRain />
       </div>
       
-      {/* Chat Interface - ทับอยู่ด้านบน */}
-      <div className="relative z-10">
+      {/* Chat Interface */}
+      <div className="relative z-10 grow flex flex-col">
         <Chat accessToken={accessToken} />
       </div>
     </div>
