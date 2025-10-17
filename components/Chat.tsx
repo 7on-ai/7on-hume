@@ -15,15 +15,10 @@ export default function ClientComponent({
   const timeout = useRef<number | null>(null);
   const ref = useRef<ComponentRef<typeof Messages> | null>(null);
 
-  // optional: use configId from environment variable
   const configId = process.env['NEXT_PUBLIC_HUME_CONFIG_ID'];
   
   return (
-    <div
-      className={
-        "relative grow flex flex-col mx-auto w-full overflow-hidden h-[0px]"
-      }
-    >
+    <div className="relative grow flex flex-col mx-auto w-full overflow-hidden" style={{ minHeight: '100%' }}>
       <VoiceProvider
         onMessage={() => {
           if (timeout.current) {
