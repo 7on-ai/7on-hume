@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "7on",
+  title: "7on AI",
   description: "The personal AI agent",
 };
 
@@ -29,10 +29,10 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
-          {/* <Nav /> */}
+          <Nav />
           {children}
           <Toaster position="top-center" richColors={true} />
         </ThemeProvider>
