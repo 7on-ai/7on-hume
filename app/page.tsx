@@ -17,14 +17,34 @@ export default async function Page() {
   }
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Matrix Rain Background - z-0 */}
-      <div className="absolute inset-0 z-0">
+    <div style={{ 
+      position: 'relative', 
+      width: '100%', 
+      height: '100vh',
+      overflow: 'hidden',
+      backgroundColor: '#000'
+    }}>
+      {/* Matrix Rain Background - Layer 0 */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0
+      }}>
         <MatrixRain />
       </div>
       
-      {/* Chat Interface - z-10 */}
-      <div className="relative z-10 w-full h-full flex flex-col">
+      {/* Chat Interface - Layer 10 */}
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
         <Chat accessToken={accessToken} />
       </div>
     </div>
