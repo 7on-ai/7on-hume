@@ -19,22 +19,22 @@ export const Nav = () => {
           variant="ghost"
           className="flex items-center gap-1.5 rounded-full text-green-400 hover:text-green-300 hover:bg-green-400/10"
         >
-          <Sevenon className="size-4" />
+          <Sun className="size-4" />
           <span>Join Waitlist</span>
         </Button>
 
-        <Button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          variant="ghost"
-          className="flex items-center gap-1.5 rounded-full text-green-400 hover:text-green-300 hover:bg-green-400/10"
-        >
-          {theme === "dark" ? (
-            <Sun className="size-4" />
-          ) : (
-            <Moon className="size-4" />
-          )}
-          <span>{theme === "dark" ? "Light" : "Dark"} Mode</span>
-        </Button>
+//        <Button
+//          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+//          variant="ghost"
+//          className="flex items-center gap-1.5 rounded-full text-green-400 hover:text-green-300 hover:bg-green-400/10"
+//        >
+//          {theme === "dark" ? (
+//            <Sun className="size-4" />
+//          ) : (
+//            <Moon className="size-4" />
+//          )}
+//          <span>{theme === "dark" ? "Light" : "Dark"} Mode</span>
+//        </Button>
       </div>
     </div>
   );
