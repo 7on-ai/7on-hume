@@ -1,12 +1,12 @@
+"use client";
+
 import { useEffect, useRef } from "react"
 
 const japaneseChars = [
   "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
   "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
   "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-  "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ",
-  "ル", "レ", "ロ", "ワ", "ヲ", "ン", "0", "1", "2", "3", "4", 
-  "5", "6", "7", "8", "9"
+  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
 ]
 
 interface Drop {
@@ -27,7 +27,7 @@ export default function MatrixRain() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext("2d")
+    const ctx = canvas.getContext("2d", { alpha: false })
     if (!ctx) return
 
     const resize = () => {
@@ -51,7 +51,7 @@ export default function MatrixRain() {
         }
         
         drops.push({
-          x: i * 20,
+          x: i * 20 + 10,
           y: Math.random() * -canvas.height,
           speed: Math.random() * 2 + 1,
           chars,
@@ -76,7 +76,7 @@ export default function MatrixRain() {
         chars.forEach((char, j) => {
           const charY = y - j * 20
           
-          if (charY > 0 && charY < canvas.height) {
+          if (charY > 0 && charY < canvas.height + 20) {
             const dx = mouseRef.current.x - x
             const dy = mouseRef.current.y - charY
             const distance = Math.sqrt(dx * dx + dy * dy)
@@ -126,7 +126,16 @@ export default function MatrixRain() {
   return (
     <canvas 
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
+      className="block w-full h-full"
+      style={{ 
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'block',
+        zIndex: 0
+      }}
     />
   )
 }
